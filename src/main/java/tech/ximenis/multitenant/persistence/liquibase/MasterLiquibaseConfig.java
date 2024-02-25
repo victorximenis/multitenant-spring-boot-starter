@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class MasterLiquibaseConfig {
 
     @Bean
-    MasterLiquibaseMigrationInitializer masterFlywayMigrationInitializer(){
+    MasterLiquibaseMigrationInitializer masterLiquibaseMigrationInitializer(){
         return new MasterLiquibaseMigrationInitializer();
     }
 
