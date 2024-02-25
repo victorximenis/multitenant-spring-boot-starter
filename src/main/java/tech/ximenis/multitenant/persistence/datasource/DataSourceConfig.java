@@ -15,6 +15,7 @@ import org.springframework.boot.jdbc.metadata.DataSourcePoolMetadataProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import tech.ximenis.multitenant.persistence.liquibase.TenantLiquibaseMigration;
 
 import javax.sql.DataSource;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,6 +60,7 @@ public class DataSourceConfig {
     @ConditionalOnProperty(name = "multi-tenant.enabled", havingValue = "true", matchIfMissing = true)
     public DataSource dataSource(TenantApplicationConfiguration tenantApplicationConfiguration,
                                  TenantRepository tenantRepository,
+                                 TenantLiquibaseMigration tenantLiquibaseMigration,
                                  MeterRegistry meterRegistry,
                                  ObjectProvider<DataSourcePoolMetadataProvider> metadataProviders) {
 
@@ -66,6 +68,7 @@ public class DataSourceConfig {
                 tenantApplicationConfiguration
                 , tenantRepository
                 , tenantHikariConfig()
+                , tenantLiquibaseMigration
                 , meterRegistry
                 , metadataProviders
         );
@@ -74,9 +77,7 @@ public class DataSourceConfig {
         multiTenantDataSource.setDefaultTargetDataSource(masterDataSource());
 
         try {
-            tenantRepository.findAll().forEach(tenant->{
-                multiTenantDataSource.addDataSource(tenant);
-            });
+            tenantRepository.findAll().forEach(multiTenantDataSource::addDataSource);
         } catch (Exception ex) {
             log.warn(String.format("DataSource - No Tenants: %s", ex.getMessage()));
         }

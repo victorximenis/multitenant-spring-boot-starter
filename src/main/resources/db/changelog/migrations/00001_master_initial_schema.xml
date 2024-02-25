@@ -46,6 +46,9 @@
             <column name="idle_timeout" type="INT" defaultValue="600000">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="DATETIME" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="deleted_at" type="DATETIME"/>
         </createTable>
     </changeSet>
 

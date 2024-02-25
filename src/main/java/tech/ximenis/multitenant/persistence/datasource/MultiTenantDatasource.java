@@ -4,6 +4,7 @@ import tech.ximenis.multitenant.TenantContext;
 import tech.ximenis.multitenant.config.TenantApplicationConfiguration;
 import tech.ximenis.multitenant.model.Tenant;
 import tech.ximenis.multitenant.persistence.TenantRepository;
+import tech.ximenis.multitenant.persistence.liquibase.TenantLiquibaseMigration;
 import tech.ximenis.multitenant.util.AESUtils;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -29,6 +30,7 @@ public class MultiTenantDatasource extends AbstractRoutingDataSource {
 
     private final TenantRepository tenantRepository;
     private final HikariConfig tenantHikariConfig;
+    private final TenantLiquibaseMigration tenantLiquibaseMigration;
     private final MeterRegistry meterRegistry;
     private final ObjectProvider<DataSourcePoolMetadataProvider> metadataProviders;
 
@@ -61,7 +63,7 @@ public class MultiTenantDatasource extends AbstractRoutingDataSource {
             if(tenant.getActive()){
                 DataSource dataSource = createDataSource(tenant);
                 addTargetDataSource(tenant.getTenantId(), dataSource);
-                // TODO: Implement tenant migrations
+                tenantLiquibaseMigration.migrateTenant(tenant);
             } else {
                 logger.debug(String.format("Inactive tenant %s!", tenant));
             }
@@ -115,11 +117,11 @@ public class MultiTenantDatasource extends AbstractRoutingDataSource {
     }
 
     private void bindDataSourceToRegistry(DataSource dataSource,
-                                          Collection<DataSourcePoolMetadataProvider> metadataProviders
-            , MeterRegistry registry, String dataSourceName) {
+                                          Collection<DataSourcePoolMetadataProvider> metadataProviders,
+                                          MeterRegistry registry,
+                                          String dataSourceName) {
 
-        new DataSourcePoolMetrics(dataSource, metadataProviders, dataSourceName, Collections.emptyList())
-                .bindTo(registry);
+        new DataSourcePoolMetrics(dataSource, metadataProviders, dataSourceName, Collections.emptyList()).bindTo(registry);
     }
 
 }

@@ -38,6 +38,8 @@ public class MasterLiquibaseMigrationInitializer implements InitializingBean {
     public SpringLiquibase genLiquibase(DataSource dataSource, String changeLog) {
 
         SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setDatabaseChangeLogTable("msbs_master_changelog");
+        liquibase.setDatabaseChangeLogLockTable("msbs_master_changeloglock");
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog(changeLog);
         liquibase.setShouldRun(true);
@@ -58,16 +60,16 @@ public class MasterLiquibaseMigrationInitializer implements InitializingBean {
             @Cleanup
             Statement st = con.createStatement();
 
-            log.info("[TENANT] - Clear liquibase locks");
-            st.executeUpdate("DELETE FROM DATABASECHANGELOGLOCK");
+            log.info("[MASTER-TENANT] - Clear liquibase locks");
+            st.executeUpdate("DELETE FROM MSBS_MASTER_CHANGELOGLOCK");
 
-            log.info("[TENANT] - Clear liquibase checksums");
-            st.executeUpdate("UPDATE DATABASECHANGELOG SET MD5SUM=NULL");
+            log.info("[MASTER-TENANT] - Clear liquibase checksums");
+            st.executeUpdate("UPDATE MSBS_MASTER_CHANGELOG SET MD5SUM=NULL");
 
             con.commit();
 
         } catch (Exception e) {
-            log.error("[TENANT] - Problem while trying to release locks.");
+            log.error("[MASTER-TENANT] - Problem while trying to release locks.");
         }
 
     }
