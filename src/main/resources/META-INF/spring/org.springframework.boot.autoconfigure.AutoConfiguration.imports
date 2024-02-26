@@ -3,5 +3,4 @@ tech.ximenis.multitenant.persistence.datasource.DataSourceConfig
 tech.ximenis.multitenant.persistence.jpa.MasterPersistenceConfig
 tech.ximenis.multitenant.persistence.jpa.TenantPersistenceConfig
 tech.ximenis.multitenant.persistence.liquibase.MasterLiquibaseConfig
-tech.ximenis.multitenant.persistence.liquibase.TenantLiquibaseConfig
 tech.ximenis.multitenant.LiquibaseExclusionEnvironmentPostProcessor

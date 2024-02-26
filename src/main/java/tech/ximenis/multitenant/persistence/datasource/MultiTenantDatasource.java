@@ -4,7 +4,6 @@ import tech.ximenis.multitenant.TenantContext;
 import tech.ximenis.multitenant.config.TenantApplicationConfiguration;
 import tech.ximenis.multitenant.model.Tenant;
 import tech.ximenis.multitenant.persistence.TenantRepository;
-import tech.ximenis.multitenant.persistence.liquibase.TenantLiquibaseMigration;
 import tech.ximenis.multitenant.util.AESUtils;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -24,13 +23,12 @@ import io.micrometer.core.instrument.MeterRegistry;
 @RequiredArgsConstructor
 public class MultiTenantDatasource extends AbstractRoutingDataSource {
 
-    private static final String TENANT_POOL_NAME_SUFFIX = "DataSource";
+    private static final String TENANT_POOL_NAME_SUFFIX = "datasource-pool";
 
     private final TenantApplicationConfiguration tenantApplicationConfiguration;
 
     private final TenantRepository tenantRepository;
     private final HikariConfig tenantHikariConfig;
-    private final TenantLiquibaseMigration tenantLiquibaseMigration;
     private final MeterRegistry meterRegistry;
     private final ObjectProvider<DataSourcePoolMetadataProvider> metadataProviders;
 
@@ -63,7 +61,6 @@ public class MultiTenantDatasource extends AbstractRoutingDataSource {
             if(tenant.getActive()){
                 DataSource dataSource = createDataSource(tenant);
                 addTargetDataSource(tenant.getTenantId(), dataSource);
-                tenantLiquibaseMigration.migrateTenant(tenant);
             } else {
                 logger.debug(String.format("Inactive tenant %s!", tenant));
             }
@@ -89,7 +86,7 @@ public class MultiTenantDatasource extends AbstractRoutingDataSource {
         config.setUsername(tenant.getUsername());
         config.setPassword(AESUtils.decrypt(tenantApplicationConfiguration.getEncryptionKey(), tenant.getPassword()));
         config.setJdbcUrl(tenant.getJdbcUrl());
-        config.setPoolName(tenant.getTenantId() + TENANT_POOL_NAME_SUFFIX);
+        config.setPoolName(String.format("%s-%s", tenant.getName().toLowerCase(), TENANT_POOL_NAME_SUFFIX));
         config.setMaximumPoolSize(tenant.getMaxPoolSize());
         config.setMinimumIdle(tenant.getMinimumIdle());
         config.setIdleTimeout(tenant.getIdleTimeout());
