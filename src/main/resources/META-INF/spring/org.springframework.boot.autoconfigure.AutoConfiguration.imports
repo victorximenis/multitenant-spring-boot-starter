@@ -1,6 +1,6 @@
-tech.ximenis.multitenant.MultiTenantAutoConfiguration
-tech.ximenis.multitenant.persistence.datasource.DataSourceConfig
-tech.ximenis.multitenant.persistence.jpa.MasterPersistenceConfig
-tech.ximenis.multitenant.persistence.jpa.TenantPersistenceConfig
-tech.ximenis.multitenant.persistence.liquibase.MasterLiquibaseConfig
-tech.ximenis.multitenant.LiquibaseExclusionEnvironmentPostProcessor
+com.github.victorximenis.multitenant.MultiTenantAutoConfiguration
+com.github.victorximenis.multitenant.persistence.datasource.DataSourceConfig
+com.github.victorximenis.multitenant.persistence.jpa.MasterPersistenceConfig
+com.github.victorximenis.multitenant.persistence.jpa.TenantPersistenceConfig
+com.github.victorximenis.multitenant.persistence.liquibase.MasterLiquibaseConfig
+com.github.victorximenis.multitenant.LiquibaseExclusionEnvironmentPostProcessor

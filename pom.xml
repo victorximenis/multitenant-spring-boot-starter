@@ -3,24 +3,31 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>multitenant-spring-boot-starter</artifactId>
+    <groupId>com.github.victorximenis</groupId>
     <packaging>jar</packaging>
+    <version>1.2.7</version>
 
-    <groupId>tech.ximenis</groupId>
     <name>multitenant-spring-boot-starter</name>
-    <version>1.2.4</version>
     <description>Multitenant Spring Boot Starter Autoconfiguration</description>
     <url>https://github.com/victorximenis/multitenant-spring-boot-starter</url>
+    <inceptionYear>2024</inceptionYear>
 
     <licenses>
         <license>
-            <name>MIT License</name>
-            <url>https://www.opensource.org/licenses/mit-license.php</url>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
         </license>
     </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/victorximenis/multitenant-spring-boot-starter/issues</url>
+    </issueManagement>
 
     <developers>
         <developer>
@@ -37,11 +44,31 @@
         </developer>
     </developers>
 
+    <contributors>
+        <contributor>
+            <name>Victor Ximenis</name>
+        </contributor>
+        <contributor>
+            <name>Leonardo Brito</name>
+        </contributor>
+    </contributors>
+
     <scm>
         <connection>scm:git:git://github.com/victorximenis/multitenant-spring-boot-starter.git</connection>
         <developerConnection>scm:git:ssh://github.com:victorximenis/multitenant-spring-boot-starter.git</developerConnection>
         <url>https://github.com/victorximenis/multitenant-spring-boot-starter/tree/main</url>
     </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>deploy</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>deploy</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -102,10 +129,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-security</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
@@ -149,6 +172,19 @@
                     <source>21</source>
                     <target>21</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
