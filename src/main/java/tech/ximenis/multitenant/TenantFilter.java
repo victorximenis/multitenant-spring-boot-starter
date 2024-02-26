@@ -16,14 +16,17 @@ import java.util.Objects;
 public class TenantFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try{
+        try {
             String tenantId = request.getHeader(TenantContext.TENANT_HEADER);
             if (Objects.nonNull(tenantId) && !tenantId.isEmpty()) {
                 TenantContext.setTenantId(tenantId);
+                filterChain.doFilter(request, response);
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(String.format("{\"error\": \"Unauthorized: %s is missing.\"}", TenantContext.TENANT_HEADER));
             }
-            filterChain.doFilter(request, response);
-        }catch (Exception e){
-            log.error("Error setting tenant", e);
         } finally {
             TenantContext.clear();
         }
