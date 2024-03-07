@@ -5,9 +5,13 @@ import com.github.victorximenis.multitenant.service.TenantService;
 import com.github.victorximenis.multitenant.service.impl.TenantServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ComponentScan(basePackages = {
+        "com.github.victorximenis.multitenant.persistence"
+})
 public class MultiTenantAutoConfiguration {
 
     @Bean
